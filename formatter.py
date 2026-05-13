@@ -9,13 +9,20 @@ def _grade_emoji(g: int) -> str:
 
 
 def format_single_grade(grade: Grade) -> str:
-    emoji = _grade_emoji(grade.grade)
-    lines = [
-        f"📚 {grade.subject}",
-        f"📅 {grade.date}  {emoji} {grade.grade}",
-    ]
-    if grade.comment:
-        lines.append(f"📝 {grade.comment}")
+    if grade.is_note:
+        lines = [
+            f"📚 {grade.subject}",
+            f"📅 {grade.date}  📝 Note",
+            f"💬 {grade.comment}",
+        ]
+    else:
+        emoji = _grade_emoji(grade.grade)
+        lines = [
+            f"📚 {grade.subject}",
+            f"📅 {grade.date}  {emoji} {grade.grade}",
+        ]
+        if grade.comment:
+            lines.append(f"📝 {grade.comment}")
     return "\n".join(lines)
 
 
@@ -41,15 +48,22 @@ def format_subject(subject: str, teacher: str, grades: List[Grade]) -> str:
 
     lines = [header, "─" * 32]
     for g in grades:
-        emoji = _grade_emoji(g.grade)
-        line = f"{g.date:<8} {emoji} {g.grade}"
-        if g.comment:
-            line += f"   {g.comment}"
+        if g.is_note:
+            line = f"{g.date:<8} 📝   {g.comment}"
+        else:
+            emoji = _grade_emoji(g.grade)
+            line = f"{g.date:<8} {emoji} {g.grade}"
+            if g.comment:
+                line += f"   {g.comment}"
         lines.append(line)
 
     lines.append("─" * 32)
-    avg = sum(g.grade for g in grades) / len(grades)
-    lines.append(f"Average: {avg:.1f}  ·  {len(grades)} marks")
+    graded = [g for g in grades if not g.is_note]
+    if graded:
+        avg = sum(g.grade for g in graded) / len(graded)
+        lines.append(f"Average: {avg:.1f}  ·  {len(graded)} marks  ·  {len(grades) - len(graded)} notes")
+    else:
+        lines.append(f"{len(grades)} notes, no numeric marks yet")
     return "\n".join(lines)
 
 
@@ -80,8 +94,9 @@ def format_averages(all_grades: List[Grade]) -> str:
         by_subject[g.subject].append(g)
 
     avgs: List[Tuple[str, float]] = [
-        (s, sum(g.grade for g in gs) / len(gs))
+        (s, sum(g.grade for g in gs if not g.is_note) / max(len([g for g in gs if not g.is_note]), 1))
         for s, gs in by_subject.items()
+        if any(not g.is_note for g in gs)
     ]
     avgs.sort(key=lambda x: x[1], reverse=True)
 

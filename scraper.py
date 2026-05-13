@@ -1,7 +1,7 @@
 import hashlib
 import logging
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -29,8 +29,12 @@ class Grade:
     subject: str
     teacher: str
     date: str
-    grade: int
+    grade: Optional[int]   # None = teacher note without a numeric grade
     comment: str
+
+    @property
+    def is_note(self) -> bool:
+        return self.grade is None
 
     def uid(self) -> str:
         key = f"{self.subject}:{self.date}:{self.grade}:{self.comment}"
@@ -130,14 +134,15 @@ def _parse_grades(html: str) -> List[Grade]:
                 date = cells[date_idx] if date_idx < len(cells) else ""
                 grade_str = cells[grade_idx] if grade_idx < len(cells) else ""
                 comment = cells[comment_idx] if comment_idx < len(cells) else ""
-                if not grade_str.isdigit():
-                    continue
+                grade_val = int(grade_str) if grade_str.isdigit() else None
+                if grade_val is None and not comment:
+                    continue  # skip truly empty rows
                 grades.append(
                     Grade(
                         subject=subject,
                         teacher=teacher,
                         date=date,
-                        grade=int(grade_str),
+                        grade=grade_val,
                         comment=" ".join(comment.split()),
                     )
                 )
