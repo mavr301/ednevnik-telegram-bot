@@ -127,7 +127,7 @@ def _parse_grades(html: str) -> List[Grade]:
         comment_idx = _find_col(headers, ["bilješka", "biljeska", "napomena", "note", "comment"], default=1)
 
         for row in table.select("div.row:not(.header)"):
-            cells = [c.get_text(strip=True) for c in row.select("div.cell > span")]
+            cells = [c.get_text(strip=True) for c in row.select("div.cell")]
             if len(cells) < 2:
                 continue
             try:
