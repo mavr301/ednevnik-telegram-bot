@@ -1,6 +1,6 @@
-<p align="center"><img src="avatar.png" width="160" alt="School bot"></p>
+<p align="center"><img src="avatar.png" width="160" alt="e-Dnevnik Telegram bot"></p>
 
-# School Bot — e-Dnevnik grades in Telegram
+# e-Dnevnik Telegram Bot
 
 A small Telegram bot that logs in to the Croatian e-Dnevnik parent/student portal
 ([ocjene.skole.hr](https://ocjene.skole.hr)), checks for new marks once a day and posts them
@@ -78,14 +78,14 @@ Accounts with mToken / two-factor login are not supported.
 docker compose up -d
 ```
 
-This pulls the published image `ghcr.io/mavr301/school-bot:latest`. To build from source
+This pulls the published image `ghcr.io/mavr301/ednevnik-telegram-bot:latest`. To build from source
 instead, swap `image:` for `build: .` in [docker-compose.yml](docker-compose.yml).
 The `./data` folder keeps track of which marks were already reported — keep it between restarts.
 
 **Plain Docker**
 
 ```bash
-docker run -d --name school-bot --env-file .env -v "$PWD/data:/app/data" --restart unless-stopped ghcr.io/mavr301/school-bot:latest
+docker run -d --name ednevnik-telegram-bot --env-file .env -v "$PWD/data:/app/data" --restart unless-stopped ghcr.io/mavr301/ednevnik-telegram-bot:latest
 ```
 
 **Without Docker** (Python 3.10+)
@@ -110,7 +110,7 @@ docker compose pull && docker compose up -d
 ```
 
 Image tags: `latest` = newest release, `1.2.3` / `1.2` = specific release, `edge` = current
-`master` (may be unstable). See [Releases](https://github.com/mavr301/school-bot/releases)
+`master` (may be unstable). See [Releases](https://github.com/mavr301/ednevnik-telegram-bot/releases)
 for what changed.
 
 ## Troubleshooting

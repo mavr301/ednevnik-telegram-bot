@@ -1,6 +1,6 @@
 services:
-  school-bot:
-    image: ghcr.io/mavr301/school-bot:latest
+  ednevnik-telegram-bot:
+    image: ghcr.io/mavr301/ednevnik-telegram-bot:latest
     # To build from source instead of pulling the published image:
     # build: .
     env_file: .env
