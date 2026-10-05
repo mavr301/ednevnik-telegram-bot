@@ -1,0 +1,10 @@
+.env
+.git
+.github
+.idea
+.claude
+data
+__pycache__
+*.pyc
+debug_grades.html
+avatar.png

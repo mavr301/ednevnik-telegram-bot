@@ -1,5 +1,15 @@
+# Secrets & runtime data
 .env
 data/
+debug_grades.html
+
+# Python
 __pycache__/
 *.pyc
-debug_grades.html
+.venv/
+venv/
+
+# Editors / local tooling
+.idea/
+.vscode/
+.claude/

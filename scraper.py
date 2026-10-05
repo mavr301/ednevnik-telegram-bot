@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import os
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
@@ -95,10 +96,12 @@ class EDnevnikScraper:
         resp = self.session.get(GRADES_URL, timeout=30)
         resp.raise_for_status()
 
-        if save_debug_html:
-            with open("debug_grades.html", "w", encoding="utf-8") as f:
+        if save_debug_html or os.getenv("SAVE_DEBUG_HTML"):
+            path = os.path.join(os.path.dirname(os.getenv("STORAGE_FILE", "data/grades.json")), "debug_grades.html")
+            os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+            with open(path, "w", encoding="utf-8") as f:
                 f.write(resp.text)
-            logger.info("Raw HTML saved to debug_grades.html")
+            logger.info("Raw HTML saved to %s", path)
 
         return _parse_grades(resp.text)
 
@@ -111,7 +114,7 @@ def _parse_grades(html: str) -> List[Grade]:
     if not tables:
         logger.warning(
             "No grade tables found. The page structure may have changed "
-            "or you may not be logged in. Run with save_debug_html=True to inspect."
+            "or you may not be logged in. Set SAVE_DEBUG_HTML=1 to inspect the page."
         )
         return grades
 
