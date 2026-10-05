@@ -19,11 +19,13 @@ to a Telegram chat. You can also ask it for all marks, a single subject, or aver
 - 🆕 `/marks` — check right now for marks added since the last check
 - 🔒 Restrict the bot to specific Telegram users
 
-## ⚠️ Requirement: a Croatian IP address
+## ⚠️ Note on server location
 
-CARNet blocks logins from non-Croatian IP addresses. The bot **must run from a machine with a
-Croatian IP**: a home server / Raspberry Pi / NAS, your own PC, or a VPS hosted in Croatia.
-A typical cloud VPS in Germany or Finland will fail with a login or connection error.
+CARNet officially restricts access to the portal from non-Croatian IP addresses. In practice,
+the author runs this bot on a **Hetzner server in Germany and it works fine**, so most EU
+hosting will probably be OK. However, this could change at any time, and other providers or
+countries may be blocked. If you see login or connection errors, try running the bot from a
+Croatian IP: a home server / Raspberry Pi / NAS, your own PC, or a VPS hosted in Croatia.
 
 ## Setup
 
@@ -96,8 +98,8 @@ python main.py
 ```
 
 **Coolify / other PaaS:** deploy the image (or this repo with the Dockerfile), set the
-variables above in the UI and mount a persistent volume at `/app/data`. Remember the
-Croatian-IP requirement for the server.
+variables above in the UI and mount a persistent volume at `/app/data`. See the
+note on server location above.
 
 On the first daily run the bot sends all existing marks once; after that only new ones.
 
@@ -113,7 +115,7 @@ for what changed.
 
 ## Troubleshooting
 
-- **Login failed / timeout** — check credentials, then check the server's IP is Croatian.
+- **Login failed / timeout** — check credentials, then if it still fails, try running from a Croatian IP (see "Note on server location").
 - **"No grade tables found" in logs, or marks missing** — the portal layout probably changed.
   Set `SAVE_DEBUG_HTML=1`, restart, run `/all`, and look at `data/debug_grades.html`.
   When opening an issue, attach it **with names and grades blanked out**.
